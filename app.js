@@ -1,3 +1,7 @@
+var tooltip = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
 var svg1 = d3.select("#bars");
 var margin = {top: 20, right: 20, bottom: 30, left: 40};
 var width = 500 - margin.left - margin.right;
@@ -86,22 +90,19 @@ d3.csv("income14.csv", function(d, i, columns) {
 var svg2 = d3.select("#scatter"),
     g2 = svg2.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var col = d3.scaleOrdinal(d3.schemeCategory10);
-
-var tooltip = d3.select("body").append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0);
+var col = d3.scaleOrdinal()//colors for different columns i.e. for different ranks
+    .range(["#ffd56b","#63c8ff", "#ffaff5"]);
 
 var xS = d3.scaleLinear()
-        .domain([0, 80])
+        .domain([20, 80])
         .range([0, width]);
 
 var yS = d3.scaleLinear()
-        .domain([80000, 120000])
+        .domain([80000, 140000])
         .range([height, 0]);
 
 var xAxisS = d3.axisBottom()
-    .ticks(4)
+    .ticks(10)
     .scale(xS);
 
 svg2.append("g")
