@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
+<style type="text/css">
+svg{
+	margin: 10px 10px;
+}
+</style>
+<body>
+	<div class="viz">
+		<svg id="bars" width="500" height="400"></svg>
+		<svg id="scatter" width="500" height="400" style="margin-left:50px; margin-bottom:-10px; padding-left:60px; padding-top:20px;"></svg>
+	</div>
+	<div id="controls">
+		<!--label for the type dropdown-->
+		<label for="type">Type:</label>
+		<input type="text" id="mytype" readonly style="border:0; color:#f6931f; font-weight:bold;">
+		<br>
+		<!--create the dropdown here-->
+		<div id="filters">
+			<select id="myselectform">
+				<option value="HE">Householder Employed</option>
+				<option value="BE">Both Partner Employed</option>
+				<option value="HB">Householder Bachelor Degree</option>
+				<option value="BB">Both Bachelor Degree</option>
+			</select>
+		</div>
+
+		<script>
+		document.getElementById("myselectform").onchange =
+		function() {
+			filterType(this.value);
+		}
+		</script>
+		<!--create the sliders here (with labels to show the selected range)-->
+	</div>
+</div>
+</body>
+<script src="app.js"></script>
+</html>
