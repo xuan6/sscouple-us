@@ -6,9 +6,38 @@
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
 <style type="text/css">
+
+body {
+	font: 11px sans-serif;
+}
+
+.axis line,
+.axis text {
+	font: 11px sans-serif;
+}
+.axis path {
+	fill: none;
+	stroke: #000;
+	shape-rendering: crispEdges;
+}
+
+
+.tooltip {
+  position: absolute;
+  text-align: left;
+  width: 180px;
+  height: 60px;
+  padding: 8px;
+  margin-top: -20px;
+  font: 10px sans-serif;
+  background-color: rgba(188,188,188,0.1);
+  pointer-events: none;
+}
+
 svg{
 	margin: 10px 10px;
 }
+
 </style>
 <body>
 	<div class="viz">
