@@ -1,12 +1,14 @@
 //tooltip for scatter plot
 var tooltip = d3.select("body").append("div")
 .attr("class", "tooltip")
+.attr("id","ttscatter")
 .style("opacity", 0);
 
 
 //tooltip for bard
 var tooltipbars = d3.select("body").append("div")
-.attr("class", "tooltipbars")
+.attr("class", "tooltip")
+.attr("id","ttbars")
 .style("opacity", 0);
 
 var svg1 = d3.select("#bars");
@@ -47,7 +49,9 @@ d3.csv("income14.csv", function(d, i, columns) {
     .enter().append("g")//draw a group
     .attr("transform", function(d) { return "translate(" + x0(d.type) + ",0)"; })
     .selectAll("rect")
-    .data(function(d) { return keys.map(function(key) { return {key: key, value: d[key]}; }); })
+    .data(function(d) {
+    	return keys.map(function(key) { return {key: key, value: d[key]}; }); 
+    })
     .enter().append("rect")//draw individual bars
     .attr("x", function(d) { return x1(d.key); })
     .attr("y", function(d) { return y(d.value); })
@@ -58,9 +62,9 @@ d3.csv("income14.csv", function(d, i, columns) {
     	tooltipbars.transition()
     	.duration(200)
     	.style("opacity",.9);
-    	tooltipbars.html(d.value+"%")
-    	.style("left",(d3.event.pageX+4)+"px")
-    	.style("top",(d3.event.pageY -2)+"px");
+    	tooltipbars.html("<p><b>Rank:</b></p><p>"+d.key+"</p><p><b>Percentage:</b></p><p>"+d.value+"%</p>")
+    	.style("left",(d3.event.pageX+20)+"px")
+    	.style("top",(d3.event.pageY -30)+"px");
     })
     .on("mouseout",function(d){
     	tooltipbars.transition()
@@ -131,38 +135,44 @@ svg2.append("g")
 .call(xAxisS)
 .append("text")
 .attr("x", width)
-.attr("y", -6)
-.style("text-anchor", "end")
-.text("Education-need-change");
+.attr("y", 35)
+.attr("fill", "#000")
+.attr("text-anchor", "end")
+.attr("font-weight", "bold")
+.text("Householder with Bachelor or Higer Degree (%)");
 
 var yAxisS = d3.axisLeft()
 .scale(yS);
 
-svg2.append("g")
+var xlabel = svg2.append("g")
 .attr("class", "axis")
 .call(yAxisS)
 .append("text")
-.attr("transform", "rotate(-90)")
-.attr("y", 6)
-.attr("dy", ".71em")
-.style("text-anchor", "end")
-.style("color", "black")
-.text("Average Household ($)");
+.attr("x", 2)
+.attr("y", y(y.ticks().pop()) + 0.5)
+.attr("dy", "0.32em")
+.attr("fill", "#000")
+.attr("font-weight", "bold")
+.attr("text-anchor", "start")
+.text("Average Household Income ($)");
+
 
 function drawVis(dataset, xVariable, yVariable) { //draw the circiles initially and on each interaction with a control
 	var xVariableLabel;
 	switch(xVariable) {
-    case 'HE':
-        xVariableLabel = 'Household Employed';
-    case 'BE':
-        xVariableLabel = 'Both Partner Employed';
-        case 'HB':
-        xVariableLabel = 'Household with Bachelor or Higer Degree';
-        case 'BE':
-        xVariableLabel = 'Both Partners with Bachelor or Higer Degrees';
-    default:
-        xVariableLabel = 'Household Employed';
-}
+		case 'HE':
+		xVariableLabel = 'Householder Employed';
+		case 'BE':
+		xVariableLabel = 'Both Partners Employed';
+		case 'HB':
+		xVariableLabel = 'Householder with Bachelor or Higer Degree';
+		case 'BE':
+		xVariableLabel = 'Both Partners with Bachelor or Higer Degrees';
+		default:
+		xVariableLabel = 'Householder Employed';
+	}
+
+	xlabel = xVariableLabel;
 
 	var circle = svg2.selectAll("circle")
 	.data(dataset);
@@ -187,9 +197,9 @@ function drawVis(dataset, xVariable, yVariable) { //draw the circiles initially 
      	.duration(200)
      	.style("opacity",.9);
      	// tooltip.html(d[xVariable])
-     	tooltip.html("<p>Percentage: "+d[xVariable]+"%</p><p>Household Income: $"+d[yVariable]+"</p>")
-     	.style("left",(d3.event.pageX+4)+"px")
-     	.style("top",(d3.event.pageY +30)+"px");
+     	tooltip.html("<p><b>Percentage:</b></p><p>"+d[xVariable]+"%</p><p><b>Household Income:</b></p><p>$"+d[yVariable]+"</p>")
+     	.style("left",(d3.event.pageX+20)+"px")
+     	.style("top",(d3.event.pageY -30)+"px");
      })
      .on("mouseout",function(d){
      	tooltip.transition()

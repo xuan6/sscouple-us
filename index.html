@@ -22,29 +22,31 @@ body {
 }
 
 
-.tooltip {
+.tooltip{
   position: absolute;
   text-align: left;
   width: 150px;
-  height: 60px;
-  padding: 8px;
+  height: 120px;
+  padding: 4px;
   margin-top: -20px;
   font: 10px sans-serif;
-  background-color: rgba(188,188,188,0.1);
   pointer-events: none;
+  background-color: #fff;
+  box-shadow: 2px 2px 2px #828282;
+  border-radius: 15px;
 }
 
-.tooltipbars {
-  position: absolute;
-  text-align: center;
-  width: 60px;
-  height: 12px;
-  padding: 8px;
-  margin-top: -20px;
-  font: 10px sans-serif;
-  background: #ddd;
-  pointer-events: none;
+.tooltip p{
+	margin-left: 20px;
 }
+
+/* #ttscatter{
+ 	background-color: rgba(188,188,188,0.1);
+ }
+
+#ttbars {
+  background-color: #fff;
+}*/
 
 svg{
 	margin: 10px 10px;
@@ -62,7 +64,9 @@ svg{
 		<label for="type">Type:</label>
 		<input type="text" id="mytype" readonly style="border:0; color:#f6931f; font-weight:bold;">
 		<br>
-		<!--create the dropdown here-->
+		<div class="button">
+
+		</div>
 		<div id="filters">
 			<select id="myselectform">
 				<option value="HE">Householder Employed</option>
