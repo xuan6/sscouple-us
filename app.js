@@ -118,7 +118,7 @@ var col = d3.scaleOrdinal()//colors for different columns i.e. for different ran
 .range(["#ffd56b","#63c8ff", "#ffaff5"]);
 
 var xS = d3.scaleLinear()
-.domain([20, 80])
+.domain([20, 100])
 .range([0, width]);
 
 var yS = d3.scaleLinear()
@@ -206,7 +206,30 @@ function drawVis(dataset, xVariable, yVariable) { //draw the circiles initially 
      	.duration(500)
      	.style("opacity",0);
      });
+}
 
+function scatterLegend(dataset){
+     var legend = svg2.append("g")
+    .attr("font-family", "sans-serif")
+    .attr("font-size", 10)
+    .attr("text-anchor", "end")
+    .selectAll("g")
+    .data(dataset)
+    .enter().append("g")
+    .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+    legend.append("rect")
+    .attr("x", width - 19)
+    .attr("width", 19)
+    .attr("height", 19)
+    .attr("fill", function(d,i){return col(d.type);})
+    .attr("opacity",0.5);
+
+    legend.append("text")
+    .attr("x", width - 24)
+    .attr("y", 9.5)
+    .attr("dy", "0.32em")
+    .text(function(d) { return d.type; });
  }
 
  var xVariable;
@@ -232,6 +255,7 @@ dataset = percentage;
 
 //all the data is now loaded, so draw the initial vis
 drawVis(dataset, xVariable, yVariable);
+scatterLegend(dataset);
 
 });
 
