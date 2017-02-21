@@ -1,5 +1,12 @@
+//tooltip for scatter plot
 var tooltip = d3.select("body").append("div")
 .attr("class", "tooltip")
+.style("opacity", 0);
+
+
+//tooltip for bard
+var tooltipbars = d3.select("body").append("div")
+.attr("class", "tooltipbars")
 .style("opacity", 0);
 
 var svg1 = d3.select("#bars");
@@ -19,7 +26,7 @@ var x1 = d3.scaleBand()//For each individual bar in a group, constructs a new ba
     .rangeRound([height, 0]);
 
 var z = d3.scaleOrdinal()//colors for different columns i.e. for different ranks
-.range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56"]);
+.range(["#C6E9BF","#A2D89A", "#73C475", "#30A355", "#006F2F"]);
 
 d3.csv("income14.csv", function(d, i, columns) {
   for (var i = 1, n = columns.length; i < n; ++i) d[columns[i]] = +d[columns[i]];//for each row
@@ -48,15 +55,15 @@ d3.csv("income14.csv", function(d, i, columns) {
     .attr("height", function(d) { return height - y(d.value); })
     .attr("fill", function(d) { return z(d.key); })
     .on("mouseover",function(d){
-    	tooltip.transition()
+    	tooltipbars.transition()
     	.duration(200)
     	.style("opacity",.9);
-    	tooltip.html(d.value)
+    	tooltipbars.html(d.value+"%")
     	.style("left",(d3.event.pageX+4)+"px")
     	.style("top",(d3.event.pageY -2)+"px");
     })
     .on("mouseout",function(d){
-    	tooltip.transition()
+    	tooltipbars.transition()
     	.duration(500)
     	.style("opacity",0);
     });
@@ -139,6 +146,7 @@ svg2.append("g")
 .attr("y", 6)
 .attr("dy", ".71em")
 .style("text-anchor", "end")
+.style("color", "black")
 .text("Average Household ($)");
 
 function drawVis(dataset, xVariable, yVariable) { //draw the circiles initially and on each interaction with a control
