@@ -157,8 +157,13 @@ svg2.append("g")
 .text("Average Household Income ($)")
 .attr("y", -10);
 
+var year;
 
-function drawVis(dataset, xVariable, yVariable) { //draw the circiles initially and on each interaction with a control
+function drawVis(data, xVariable, yVariable, year) { //draw the circiles initially and on each interaction with a control
+	var dataset = data.filter(function(d) {
+            return d["year"] == year;
+        });
+
 	var xVariableLabel;
 	switch(xVariable) {
 		case 'HE':
@@ -212,12 +217,16 @@ function drawVis(dataset, xVariable, yVariable) { //draw the circiles initially 
  }
 
  function scatterLegend(dataset){
+ 	var data = dataset.filter(function(d) {
+            return d["year"] == "2014";
+        });
+
  	var legend = svg2.append("g")
  	.attr("font-family", "sans-serif")
  	.attr("font-size", 10)
  	.attr("text-anchor", "end")
  	.selectAll("g")
- 	.data(dataset)
+ 	.data(data)
  	.enter().append("g")
  	.attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
 
@@ -239,8 +248,9 @@ function drawVis(dataset, xVariable, yVariable) { //draw the circiles initially 
  var yVariable;
  var dataset;
 
+year = '2014';
 
- d3.csv("ee14.csv", function(error, percentage) {
+d3.csv("ee14.csv", function(error, percentage) {
 //read in the data
 if (error) return console.warn(error);
 percentage.forEach(function(d) {
@@ -257,7 +267,7 @@ yVariable = 'AHI';
 dataset = percentage;
 
 //all the data is now loaded, so draw the initial vis
-drawVis(dataset, xVariable, yVariable);
+drawVis(dataset, xVariable, yVariable, year);
 scatterLegend(dataset);
 
 });
@@ -265,12 +275,22 @@ scatterLegend(dataset);
 
  function filterType(mtype) {
  	xVariable = mtype;
- 	drawVis(dataset, xVariable, yVariable); 
+ 	drawVis(dataset, xVariable, yVariable, year); 
+ }
+
+  function filterYear(myear) {
+ 	year = myear;
+ 	drawVis(dataset, xVariable, yVariable, year); 
  }
 
  document.getElementById("myselectform").onchange =
  function() {
  	filterType(this.value);
+ }
+
+ document.getElementById("selectyear").onchange =
+ function() {
+ 	filterYear(this.value);
  }
 
 
