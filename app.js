@@ -50,19 +50,19 @@ d3.csv("income14.csv", function(d, i, columns) {
     .attr("transform", function(d) { return "translate(" + x0(d.type) + ",0)"; })
     .selectAll("rect")
     .data(function(d) {
-    	return keys.map(function(key) { return {key: key, value: d[key]}; }); 
+    	return keys.map(function(key) { return {key: key, per: d[key]}; }); 
     })
     .enter().append("rect")//draw individual bars
     .attr("x", function(d) { return x1(d.key); })
-    .attr("y", function(d) { return y(d.value); })
+    .attr("y", function(d) { return y(d.per); })
     .attr("width", x1.bandwidth())
-    .attr("height", function(d) { return height - y(d.value); })
+    .attr("height", function(d) { return height - y(d.per); })
     .attr("fill", function(d) { return z(d.key); })
     .on("mouseover",function(d){
     	tooltipbars.transition()
     	.duration(200)
     	.style("opacity",.9);
-    	tooltipbars.html("<p><b>Rank:</b></p><p>"+d.key+"</p><p><b>Percentage:</b></p><p>"+d.value+"%</p>")
+    	tooltipbars.html("<p><b>Rank:</b></p><p>"+d.key+"</p><p><b>Percentage:</b></p><p>"+String(d.per).slice(0,4)+"%</p>")
     	.style("left",(d3.event.pageX+20)+"px")
     	.style("top",(d3.event.pageY -30)+"px");
     })
@@ -87,7 +87,8 @@ d3.csv("income14.csv", function(d, i, columns) {
     .attr("fill", "#000")
     .attr("font-weight", "bold")
     .attr("text-anchor", "start")
-    .text("Percentage");
+    .text("Percentage")
+    .attr("y", -10);;
 
     var legend = g.append("g")
     .attr("font-family", "sans-serif")
@@ -118,18 +119,18 @@ var col = d3.scaleOrdinal()//colors for different columns i.e. for different ran
 .range(["#ffd56b","#63c8ff", "#ffaff5"]);
 
 var xS = d3.scaleLinear()
-.domain([20, 100])
+.domain([0, 100])
 .range([0, width]);
 
 var yS = d3.scaleLinear()
-.domain([80000, 140000])
+.domain([60000, 140000])
 .range([height, 0]);
 
 var xAxisS = d3.axisBottom()
 .ticks(10)
 .scale(xS);
 
-svg2.append("g")
+var xlabel = svg2.append("g")
 .attr("class", "axis")
 .attr("transform", "translate(0," + height + ")")
 .call(xAxisS)
@@ -139,12 +140,12 @@ svg2.append("g")
 .attr("fill", "#000")
 .attr("text-anchor", "end")
 .attr("font-weight", "bold")
-.text("Householder with Bachelor or Higer Degree (%)");
+.text("Householder Employed (%)");
 
 var yAxisS = d3.axisLeft()
 .scale(yS);
 
-var xlabel = svg2.append("g")
+svg2.append("g")
 .attr("class", "axis")
 .call(yAxisS)
 .append("text")
@@ -152,27 +153,32 @@ var xlabel = svg2.append("g")
 .attr("y", y(y.ticks().pop()) + 0.5)
 .attr("dy", "0.32em")
 .attr("fill", "#000")
-.attr("font-weight", "bold")
 .attr("text-anchor", "start")
-.text("Average Household Income ($)");
+.text("Average Household Income ($)")
+.attr("y", -10);
 
 
 function drawVis(dataset, xVariable, yVariable) { //draw the circiles initially and on each interaction with a control
 	var xVariableLabel;
 	switch(xVariable) {
 		case 'HE':
-		xVariableLabel = 'Householder Employed';
+		xVariableLabel = 'Householder Employed(%)';
+		break;
 		case 'BE':
-		xVariableLabel = 'Both Partners Employed';
+		xVariableLabel = 'Both Partners Employed(%)';
+		break;
 		case 'HB':
-		xVariableLabel = 'Householder with Bachelor or Higer Degree';
-		case 'BE':
-		xVariableLabel = 'Both Partners with Bachelor or Higer Degrees';
+		xVariableLabel = 'Householder with Bachelor or Higer Degree(%)';
+		break;
+		case 'BB':
+		xVariableLabel = 'Both Partners with Bachelor or Higer Degrees(%)';
+		break;
 		default:
-		xVariableLabel = 'Householder Employed';
+		xVariableLabel = 'Householder Employed(%)';
 	}
 
-	xlabel = xVariableLabel;
+	xlabel
+	.text(xVariableLabel);
 
 	var circle = svg2.selectAll("circle")
 	.data(dataset);
@@ -187,16 +193,13 @@ function drawVis(dataset, xVariable, yVariable) { //draw the circiles initially 
 	circle.enter().append("circle")
 	.attr("cx", function(d, i) { return xS(d[xVariable]);  })
 	.attr("cy", function(d, i) { return yS(d[yVariable]);  })
-	.attr("r", 10)
-	.style("stroke", "black")
-     //.style("fill", function(d) { return colLightness(d.vol); })
+	.attr("r", 5)
      .style("fill", function(d) { return col(d.type); })
-     .style("opacity", 0.5)
+     .style("opacity", 0.8)
      .on("mouseover",function(d){
      	tooltip.transition()
      	.duration(200)
      	.style("opacity",.9);
-     	// tooltip.html(d[xVariable])
      	tooltip.html("<p><b>Percentage:</b></p><p>"+d[xVariable]+"%</p><p><b>Household Income:</b></p><p>$"+d[yVariable]+"</p>")
      	.style("left",(d3.event.pageX+20)+"px")
      	.style("top",(d3.event.pageY -30)+"px");
@@ -206,30 +209,30 @@ function drawVis(dataset, xVariable, yVariable) { //draw the circiles initially 
      	.duration(500)
      	.style("opacity",0);
      });
-}
+ }
 
-function scatterLegend(dataset){
-     var legend = svg2.append("g")
-    .attr("font-family", "sans-serif")
-    .attr("font-size", 10)
-    .attr("text-anchor", "end")
-    .selectAll("g")
-    .data(dataset)
-    .enter().append("g")
-    .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+ function scatterLegend(dataset){
+ 	var legend = svg2.append("g")
+ 	.attr("font-family", "sans-serif")
+ 	.attr("font-size", 10)
+ 	.attr("text-anchor", "end")
+ 	.selectAll("g")
+ 	.data(dataset)
+ 	.enter().append("g")
+ 	.attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
 
-    legend.append("rect")
-    .attr("x", width - 19)
-    .attr("width", 19)
-    .attr("height", 19)
-    .attr("fill", function(d,i){return col(d.type);})
-    .attr("opacity",0.5);
+ 	legend.append("rect")
+ 	.attr("x", width - 19)
+ 	.attr("width", 19)
+ 	.attr("height", 19)
+ 	.attr("fill", function(d,i){return col(d.type);})
+ 	.attr("opacity",0.8);
 
-    legend.append("text")
-    .attr("x", width - 24)
-    .attr("y", 9.5)
-    .attr("dy", "0.32em")
-    .text(function(d) { return d.type; });
+ 	legend.append("text")
+ 	.attr("x", width - 24)
+ 	.attr("y", 9.5)
+ 	.attr("dy", "0.32em")
+ 	.text(function(d) { return d.type; });
  }
 
  var xVariable;
@@ -241,7 +244,7 @@ function scatterLegend(dataset){
 //read in the data
 if (error) return console.warn(error);
 percentage.forEach(function(d) {
-     	// console.log(d[columns[t]]);
+     	// get numerical value
      	d.HE = +d.HE;
      	d.BE = +d.BE;
      	d.HB = +d.HB;
@@ -261,8 +264,13 @@ scatterLegend(dataset);
 
 
  function filterType(mtype) {
- 	xVariable == mtype;
+ 	xVariable = mtype;
  	drawVis(dataset, xVariable, yVariable); 
+ }
+
+ document.getElementById("myselectform").onchange =
+ function() {
+ 	filterType(this.value);
  }
 
 

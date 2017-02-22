@@ -11,6 +11,25 @@ body {
 	font: 11px sans-serif;
 }
 
+.canvas{
+	display: inline-block;
+}
+
+
+#controls{
+	display: block;
+	top: 20px;
+	position: relative;
+	margin-left: 70px;
+}
+
+#scatter{
+	margin-left:50px; 
+	margin-bottom:-40px; 
+	padding-left:60px; 
+	padding-top:20px;
+}
+
 .axis line,
 .axis text {
 	font: 11px sans-serif;
@@ -23,17 +42,17 @@ body {
 
 
 .tooltip{
-  position: absolute;
-  text-align: left;
-  width: 150px;
-  height: 120px;
-  padding: 4px;
-  margin-top: -20px;
-  font: 10px sans-serif;
-  pointer-events: none;
-  background-color: #fff;
-  box-shadow: 2px 2px 2px #828282;
-  border-radius: 15px;
+	position: absolute;
+	text-align: left;
+	width: 150px;
+	height: 120px;
+	padding: 4px;
+	margin-top: -20px;
+	font: 10px sans-serif;
+	pointer-events: none;
+	background-color: #fff;
+	box-shadow: 2px 2px 2px #828282;
+	border-radius: 15px;
 }
 
 .tooltip p{
@@ -46,45 +65,40 @@ body {
 
 #ttbars {
   background-color: #fff;
-}*/
+  }*/
 
-svg{
-	margin: 10px 10px;
-}
+  svg{
+  	margin: 10px 10px;
+  }
 
 
-</style>
-<body>
-	<div class="viz">
-		<svg id="bars" width="500" height="400"></svg>
-		<svg id="scatter" width="500" height="400" style="margin-left:50px; margin-bottom:-10px; padding-left:60px; padding-top:20px;"></svg>
-	</div>
-	<div id="controls">
-		<!--label for the type dropdown-->
-		<label for="type">Type:</label>
-		<input type="text" id="mytype" readonly style="border:0; color:#f6931f; font-weight:bold;">
-		<br>
-		<div class="button">
+  </style>
+  <body>
+  	<div class="viz">
+  		<div class="canvas">
+  			<svg id="bars" width="500" height="400"></svg>
+  		</div>
+  		<div class="canvas">
+  			<svg id="scatter" width="500" height="400"></svg>
+  			<div id="controls">
+  				<label for="type">Variable:</label>
+  				<input type="text" id="mytype" readonly style="border:0; color:#f6931f; font-weight:bold; ">
+  				<div id="filters">
+  					<select id="myselectform">
+  						<option disabled>---Employment---</option>
+  						<option value="HE">Householder Employed</option>
+  						<option value="BE">Both Employed</option>
+  						<option disabled>---Education---</option>
+  						<option value="HB">Householder Bachelor Degree</option>
+  						<option value="BB">Both Bachelor Degree</option>
+  					</select>
+  				</div>
+  			</div>
+  		</div>
 
-		</div>
-		<div id="filters">
-			<select id="myselectform">
-				<option value="HE">Householder Employed</option>
-				<option value="BE">Both Partner Employed</option>
-				<option value="HB">Householder Bachelor Degree</option>
-				<option value="BB">Both Bachelor Degree</option>
-			</select>
-		</div>
+  	</div>
 
-		<script>
-		document.getElementById("myselectform").onchange =
-		function() {
-			filterType(this.value);
-		}
-		</script>
-		<!--create the sliders here (with labels to show the selected range)-->
-	</div>
-</div>
+  </div>
 </body>
 <script src="app.js"></script>
 </html>
