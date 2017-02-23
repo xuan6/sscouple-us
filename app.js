@@ -127,7 +127,7 @@ function drawBars(data,year){
 		.attr("fill", "#000")
 		.attr("font-weight", "bold")
 		.attr("text-anchor", "start")
-		.text("Percentage")
+		.text("Percentage(%)")
 		.attr("y", -10);
 	}
 
