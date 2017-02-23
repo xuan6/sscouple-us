@@ -1,3 +1,10 @@
+var year = '2014';//default year
+var dataset2;//income
+var xVariable;
+var yVariable;
+var dataset;//education and employment rate
+var bars;//svg for bar chart
+
 //tooltip for scatter plot
 var tooltip = d3.select("body").append("div")
 .attr("class", "tooltip")
@@ -30,90 +37,112 @@ var x1 = d3.scaleBand()//For each individual bar in a group, constructs a new ba
 var z = d3.scaleOrdinal()//colors for different columns i.e. for different ranks
 .range(["#C6E9BF","#A2D89A", "#73C475", "#30A355", "#006F2F"]);
 
-d3.csv("income14.csv", function(d, i, columns) {
+function drawBars(dataset,year){
+
+	var data = dataset2.filter(function(d) {
+		return d["year"] == year;
+	});
+
+	x0.domain(data.map(function(d) { return d.type; }));//set the domain of those types of couples
+	x1.domain(keys).rangeRound([0, x0.bandwidth()]);//set the sub-domain (i.e. the income ranks) of each group of couples
+	y.domain([0, 70]);
+
+	bars = 
+	g.append("g");
+
+	//delete data
+	bars
+	.selectAll("g")
+	.data(data)
+	.exit().remove();
+
+	//add data
+	bars
+	.selectAll("g")
+	.data(data)
+	    .enter().append("g")//draw a group
+	    .attr("transform", function(d) { return "translate(" + x0(d.type) + ",0)"; })
+	    .selectAll("rect")
+	    .data(function(d) {
+	    	return keys.map(function(key) { return {key: key, per: d[key]}; }); 
+	    })
+	    .enter().append("rect")//draw individual bars
+	    .attr("x", function(d) { return x1(d.key); })
+	    .attr("y", function(d) { return y(d.per); })
+	    .attr("width", x1.bandwidth())
+	    .attr("height", function(d) { return height - y(d.per); })
+	    .attr("fill", function(d) { return z(d.key); })
+	    .on("mouseover",function(d){
+	    	tooltipbars.transition()
+	    	.duration(200)
+	    	.style("opacity",.9);
+	    	tooltipbars.html("<p><b>Rank:</b></p><p>"+d.key+"</p><p><b>Percentage:</b></p><p>"+String(d.per).slice(0,4)+"%</p>")
+	    	.style("left",(d3.event.pageX+20)+"px")
+	    	.style("top",(d3.event.pageY -30)+"px");
+	    })
+	    .on("mouseout",function(d){
+	    	tooltipbars.transition()
+	    	.duration(500)
+	    	.style("opacity",0);
+	    });
+
+	    g.append("g")
+	    .attr("class", "axis")
+	    .attr("transform", "translate(0," + height + ")")
+	    .call(d3.axisBottom(x0));
+
+	    g.append("g")
+	    .attr("class", "axis")
+	    .call(d3.axisLeft(y).ticks(null, "s"))
+	    .append("text")
+	    .attr("x", 2)
+	    .attr("y", y(y.ticks().pop()) + 0.5)
+	    .attr("dy", "0.32em")
+	    .attr("fill", "#000")
+	    .attr("font-weight", "bold")
+	    .attr("text-anchor", "start")
+	    .text("Percentage")
+	    .attr("y", -10);
+
+	}
+
+	function barLegend(dataset){
+		var legend = g.append("g")
+		.attr("font-family", "sans-serif")
+		.attr("font-size", 10)
+		.attr("text-anchor", "end")
+		.selectAll("g")
+		.data(keys.slice().reverse())
+		.enter().append("g")
+		.attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+		legend.append("rect")
+		.attr("x", width - 19)
+		.attr("width", 19)
+		.attr("height", 19)
+		.attr("fill", z);
+
+		legend.append("text")
+		.attr("x", width - 24)
+		.attr("y", 9.5)
+		.attr("dy", "0.32em")
+		.text(function(d) { return d; });
+	}
+
+	d3.csv("income14.csv", function(d, i, columns) {
   for (var i = 1, n = columns.length; i < n; ++i) d[columns[i]] = +d[columns[i]];//for each row
   return d;//get the value of each column
 }, function(error, data) {
 	if (error) throw error;
-
-  var keys = data.columns.slice(1);//get the name of each column as a key
-
-  x0.domain(data.map(function(d) { return d.type; }));//set the domain of those types of couples
-  x1.domain(keys).rangeRound([0, x0.bandwidth()]);//set the sub-domain (i.e. the income ranks) of each group of couples
-  y.domain([0, d3.max(data, function(d) { return d3.max(keys, function(key) { return d[key]; }); })]).nice();
-
+	dataset2 = data;
+  keys = dataset2.columns.slice(1).slice(0,5);//get the name of each column as a key
   //draw grouped bars
-  g.append("g")
-  .selectAll("g")
-  .data(data)
-    .enter().append("g")//draw a group
-    .attr("transform", function(d) { return "translate(" + x0(d.type) + ",0)"; })
-    .selectAll("rect")
-    .data(function(d) {
-    	return keys.map(function(key) { return {key: key, per: d[key]}; }); 
-    })
-    .enter().append("rect")//draw individual bars
-    .attr("x", function(d) { return x1(d.key); })
-    .attr("y", function(d) { return y(d.per); })
-    .attr("width", x1.bandwidth())
-    .attr("height", function(d) { return height - y(d.per); })
-    .attr("fill", function(d) { return z(d.key); })
-    .on("mouseover",function(d){
-    	tooltipbars.transition()
-    	.duration(200)
-    	.style("opacity",.9);
-    	tooltipbars.html("<p><b>Rank:</b></p><p>"+d.key+"</p><p><b>Percentage:</b></p><p>"+String(d.per).slice(0,4)+"%</p>")
-    	.style("left",(d3.event.pageX+20)+"px")
-    	.style("top",(d3.event.pageY -30)+"px");
-    })
-    .on("mouseout",function(d){
-    	tooltipbars.transition()
-    	.duration(500)
-    	.style("opacity",0);
-    });
-
-    g.append("g")
-    .attr("class", "axis")
-    .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(x0));
-
-    g.append("g")
-    .attr("class", "axis")
-    .call(d3.axisLeft(y).ticks(null, "s"))
-    .append("text")
-    .attr("x", 2)
-    .attr("y", y(y.ticks().pop()) + 0.5)
-    .attr("dy", "0.32em")
-    .attr("fill", "#000")
-    .attr("font-weight", "bold")
-    .attr("text-anchor", "start")
-    .text("Percentage")
-    .attr("y", -10);;
-
-    var legend = g.append("g")
-    .attr("font-family", "sans-serif")
-    .attr("font-size", 10)
-    .attr("text-anchor", "end")
-    .selectAll("g")
-    .data(keys.slice().reverse())
-    .enter().append("g")
-    .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
-
-    legend.append("rect")
-    .attr("x", width - 19)
-    .attr("width", 19)
-    .attr("height", 19)
-    .attr("fill", z);
-
-    legend.append("text")
-    .attr("x", width - 24)
-    .attr("y", 9.5)
-    .attr("dy", "0.32em")
-    .text(function(d) { return d; });
+  drawBars(dataset2,year);
+  barLegend(dataset2);
 });
 
-var svg2 = d3.select("#scatter"),
-g2 = svg2.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+	var svg2 = d3.select("#scatter"),
+	g2 = svg2.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 var col = d3.scaleOrdinal()//colors for different columns i.e. for different ranks
 .range(["#ffd56b","#63c8ff", "#ffaff5"]);
@@ -157,12 +186,12 @@ svg2.append("g")
 .text("Average Household Income ($)")
 .attr("y", -10);
 
-var year;
+
 
 function drawVis(data, xVariable, yVariable, year) { //draw the circiles initially and on each interaction with a control
 	var dataset = data.filter(function(d) {
-            return d["year"] == year;
-        });
+		return d["year"] == year;
+	});
 
 	var xVariableLabel;
 	switch(xVariable) {
@@ -185,70 +214,68 @@ function drawVis(data, xVariable, yVariable, year) { //draw the circiles initial
 	xlabel
 	.text(xVariableLabel);
 
-	var circle = svg2.selectAll("circle")
-	.data(dataset);
+	var circle = svg2.selectAll("circle");
 
 	circle
+	.data(dataset)
 	.attr("cx", function(d, i) { return xS(d[xVariable]);  })
 	.attr("cy", function(d, i) { return yS(d[yVariable]);  })
 	.style("fill", function(d) { return col(d.type); });
 
-	circle.exit().remove();
+	circle.data(dataset).exit().remove();
 
-	circle.enter().append("circle")
+	circle.data(dataset).enter().append("circle")
 	.attr("cx", function(d, i) { return xS(d[xVariable]);  })
 	.attr("cy", function(d, i) { return yS(d[yVariable]);  })
 	.attr("r", 5)
-     .style("fill", function(d) { return col(d.type); })
-     .style("opacity", 0.8)
-     .on("mouseover",function(d){
-     	tooltip.transition()
-     	.duration(200)
-     	.style("opacity",.9);
-     	tooltip.html("<p><b>Percentage:</b></p><p>"+d[xVariable]+"%</p><p><b>Household Income:</b></p><p>$"+d[yVariable]+"</p>")
-     	.style("left",(d3.event.pageX+20)+"px")
-     	.style("top",(d3.event.pageY -30)+"px");
-     })
-     .on("mouseout",function(d){
-     	tooltip.transition()
-     	.duration(500)
-     	.style("opacity",0);
-     });
- }
+	.style("fill", function(d) { return col(d.type); })
+	.style("opacity", 0.8)
+	.on("mouseover",function(d){
+		tooltip.transition()
+		.duration(200)
+		.style("opacity",.9);
+		tooltip.html("<p><b>Percentage:</b></p><p>"+d[xVariable]+"%</p><p><b>Household Income:</b></p><p>$"+d[yVariable]+"</p>")
+		.style("left",(d3.event.pageX+20)+"px")
+		.style("top",(d3.event.pageY -30)+"px");
+	})
+	.on("mouseout",function(d){
+		tooltip.transition()
+		.duration(500)
+		.style("opacity",0);
+	});
+}
 
- function scatterLegend(dataset){
- 	var data = dataset.filter(function(d) {
-            return d["year"] == "2014";
-        });
+function scatterLegend(dataset){
+	var data = dataset.filter(function(d) {
+		return d["year"] == "2014";
+	});
 
- 	var legend = svg2.append("g")
- 	.attr("font-family", "sans-serif")
- 	.attr("font-size", 10)
- 	.attr("text-anchor", "end")
- 	.selectAll("g")
- 	.data(data)
- 	.enter().append("g")
- 	.attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+	var legend = svg2.append("g")
+	.attr("font-family", "sans-serif")
+	.attr("font-size", 10)
+	.attr("text-anchor", "end")
+	.selectAll("g")
+	.data(data)
+	.enter().append("g")
+	.attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
 
- 	legend.append("rect")
- 	.attr("x", width - 19)
- 	.attr("width", 19)
- 	.attr("height", 19)
- 	.attr("fill", function(d,i){return col(d.type);})
- 	.attr("opacity",0.8);
+	legend.append("rect")
+	.attr("x", width - 19)
+	.attr("width", 19)
+	.attr("height", 19)
+	.attr("fill", function(d,i){return col(d.type);})
+	.attr("opacity",0.8);
 
- 	legend.append("text")
- 	.attr("x", width - 24)
- 	.attr("y", 9.5)
- 	.attr("dy", "0.32em")
- 	.text(function(d) { return d.type; });
- }
+	legend.append("text")
+	.attr("x", width - 24)
+	.attr("y", 9.5)
+	.attr("dy", "0.32em")
+	.text(function(d) { return d.type; });
+}
 
- var xVariable;
- var yVariable;
- var dataset;
 
-year = '2014';
+
+
 
 d3.csv("ee14.csv", function(error, percentage) {
 //read in the data
@@ -273,24 +300,28 @@ scatterLegend(dataset);
 });
 
 
- function filterType(mtype) {
- 	xVariable = mtype;
- 	drawVis(dataset, xVariable, yVariable, year); 
- }
+function filterType(mtype) {
+	xVariable = mtype;
+	drawVis(dataset, xVariable, yVariable, year); 
+}
 
-  function filterYear(myear) {
- 	year = myear;
- 	drawVis(dataset, xVariable, yVariable, year); 
- }
+function filterYear(myear) {
+	year = myear;
+	drawVis(dataset, xVariable, yVariable, year);
+	bars.remove();//clear old chart
+	// circiles.remove();
+	drawBars(dataset, year)
+}
 
- document.getElementById("myselectform").onchange =
- function() {
- 	filterType(this.value);
- }
+document.getElementById("myselectform").onchange =
+function() {
+	// circiles.remove();
+	filterType(this.value);
+}
 
- document.getElementById("selectyear").onchange =
- function() {
- 	filterYear(this.value);
- }
+document.getElementById("selectyear").onchange =
+function() {
+	filterYear(this.value);
+}
 
 
