@@ -23,6 +23,10 @@ body {
 	margin-left: 70px;
 }
 
+/*.filters{
+  display: inline-block;
+}*/
+
 #scatter{
 	margin-left:50px; 
 	margin-bottom:-75px; 
@@ -41,7 +45,7 @@ body {
 }
 
 
-.tooltip{
+.tooltip, .tooltipscatter{
 	position: absolute;
 	text-align: left;
 	width: 150px;
@@ -82,7 +86,6 @@ body {
   			<svg id="scatter" width="500" height="400"></svg>
   			<div id="controls">
   				<label for="type">Year:</label>
-  				<input type="text" id="mytype" readonly style="border:0; color:#f6931f; font-weight:bold; ">
   				<div class="filters">
   					<select id="selectyear">
   						<option value="2014">2014</option>
@@ -91,7 +94,7 @@ body {
   				</div>
   				<label for="type" >Variable:</label>
   				<div class="filters">
-  					<select id="myselectform">
+  					<select id="selecttype">
   						<option disabled>---Employment---</option>
   						<option value="HE">Householder Employed</option>
   						<option value="BE">Both Employed</option>

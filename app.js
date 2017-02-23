@@ -1,25 +1,24 @@
 var year = '2014';//default year
-var datasetBar;//dataset for bar charts. i.e.income distribution
 var xVariable = 'HE';//default x variable of scatterplot (i.e. choose sub measurement from education or employment)
 var yVariable = 'AHI';//default y variable of scatterplot (i.e. average househoul income)
+var datasetBar;//dataset for bar charts. i.e.income distribution
 var datasetScatter;//dataset for scatter plot. i.e. avg household income and education/employment rate
 var bars;//svg of bar chart
-var circles;
+var circles;//svg for scatter plot
+
 //tooltip for scatter plot
 var tooltip = d3.select("body").append("div")
 .attr("class", "tooltip")
-.attr("id","ttscatter")
 .style("opacity", 0);
 
 
 //tooltip for bard
 var tooltipbars = d3.select("body").append("div")
 .attr("class", "tooltip")
-.attr("id","ttbars")
 .style("opacity", 0);
 
 
-//components of bar charts
+//setup the components of bar charts
 var svg1 = d3.select("#bars");
 var margin = {top: 20, right: 20, bottom: 30, left: 40};
 var width = 500 - margin.left - margin.right;
@@ -189,7 +188,7 @@ svg2.append("g")
 .attr("y", -10);
 
 
-
+var xVar;
 function drawVis(data, xVariable, yVariable, year) { //draw the circles initially and on each interaction with a control
 	var ndata = data.filter(function(d) {
 		return d["year"] == year;
@@ -211,12 +210,14 @@ function drawVis(data, xVariable, yVariable, year) { //draw the circles initiall
 		break;
 		default:
 		xVariableLabel = 'Householder Employed(%)';
-	}
+}
 
 	xlabel
 	.text(xVariableLabel);
 
 	circles = svg2.selectAll("circle");
+
+	xVar = xVariable.toString();
 
 	circles
 	.data(ndata)
@@ -225,8 +226,6 @@ function drawVis(data, xVariable, yVariable, year) { //draw the circles initiall
 	.style("fill", function(d) { return col(d.type); });
 
 	circles.data(ndata).exit().remove();
-
-
 
 	circles.data(ndata).enter().append("circle")
 	.attr("cx", function(d, i) { return xS(d[xVariable]);  })
@@ -238,7 +237,7 @@ function drawVis(data, xVariable, yVariable, year) { //draw the circles initiall
 		tooltip.transition()
 		.duration(200)
 		.style("opacity",.9);
-		tooltip.html("<p><b>Percentage:</b></p><p>"+d[xVariable]+"%</p><p><b>Household Income:</b></p><p>$"+d[yVariable]+"</p>")
+		tooltip.html("<p><b>Percentage:</b></p><p>"+d[xVar]+"%</p><p><b>Household Income:</b></p><p>$"+d[yVariable]+"</p>")
 		.style("left",(d3.event.pageX+20)+"px")
 		.style("top",(d3.event.pageY -30)+"px");
 	})
@@ -284,14 +283,14 @@ function scatterLegend(data){
 d3.csv("ee14.csv", function(error, eedata) {
 //read in the data
 if (error) return console.warn(error);
-eedata.forEach(function(d) {
-     	// get numerical value
-     	d.HE = +d.HE;
-     	d.BE = +d.BE;
-     	d.HB = +d.HB;
-     	d.BB = +d.BB;
-     	d.AHI = +d.AHI;
-     });
+// eedata.forEach(function(d) {
+//      	// get numerical value
+//      	d.HE = +d.HE;
+//      	d.BE = +d.BE;
+//      	d.HB = +d.HB;
+//      	d.BB = +d.BB;
+//      	d.AHI = +d.AHI;
+//      });
 
 datasetScatter = eedata;
 
@@ -316,7 +315,7 @@ function filterYear(myear) {
 	drawBars(datasetBar, year)
 }
 
-document.getElementById("myselectform").onchange =
+document.getElementById("selecttype").onchange =
 function() {
 	filterType(this.value);
 }
