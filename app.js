@@ -1,10 +1,10 @@
 var year = '2014';//default year
-var dataset2;//income
-var xVariable;
-var yVariable;
-var dataset;//education and employment rate
-var bars;//svg for bar chart
-
+var datasetBar;//dataset for bar charts. i.e.income distribution
+var xVariable = 'HE';//default x variable of scatterplot (i.e. choose sub measurement from education or employment)
+var yVariable = 'AHI';//default y variable of scatterplot (i.e. average househoul income)
+var datasetScatter;//dataset for scatter plot. i.e. avg household income and education/employment rate
+var bars;//svg of bar chart
+var circles;
 //tooltip for scatter plot
 var tooltip = d3.select("body").append("div")
 .attr("class", "tooltip")
@@ -18,6 +18,8 @@ var tooltipbars = d3.select("body").append("div")
 .attr("id","ttbars")
 .style("opacity", 0);
 
+
+//components of bar charts
 var svg1 = d3.select("#bars");
 var margin = {top: 20, right: 20, bottom: 30, left: 40};
 var width = 500 - margin.left - margin.right;
@@ -37,13 +39,13 @@ var x1 = d3.scaleBand()//For each individual bar in a group, constructs a new ba
 var z = d3.scaleOrdinal()//colors for different columns i.e. for different ranks
 .range(["#C6E9BF","#A2D89A", "#73C475", "#30A355", "#006F2F"]);
 
-function drawBars(dataset,year){
+function drawBars(data,year){
 
-	var data = dataset2.filter(function(d) {
+	var ndata = data.filter(function(d) {
 		return d["year"] == year;
 	});
 
-	x0.domain(data.map(function(d) { return d.type; }));//set the domain of those types of couples
+	x0.domain(ndata.map(function(d) { return d.type; }));//set the domain of those types of couples
 	x1.domain(keys).rangeRound([0, x0.bandwidth()]);//set the sub-domain (i.e. the income ranks) of each group of couples
 	y.domain([0, 70]);
 
@@ -53,13 +55,13 @@ function drawBars(dataset,year){
 	//delete data
 	bars
 	.selectAll("g")
-	.data(data)
+	.data(ndata)
 	.exit().remove();
 
 	//add data
 	bars
 	.selectAll("g")
-	.data(data)
+	.data(ndata)
 	    .enter().append("g")//draw a group
 	    .attr("transform", function(d) { return "translate(" + x0(d.type) + ",0)"; })
 	    .selectAll("rect")
@@ -86,27 +88,9 @@ function drawBars(dataset,year){
 	    	.style("opacity",0);
 	    });
 
-	    g.append("g")
-	    .attr("class", "axis")
-	    .attr("transform", "translate(0," + height + ")")
-	    .call(d3.axisBottom(x0));
-
-	    g.append("g")
-	    .attr("class", "axis")
-	    .call(d3.axisLeft(y).ticks(null, "s"))
-	    .append("text")
-	    .attr("x", 2)
-	    .attr("y", y(y.ticks().pop()) + 0.5)
-	    .attr("dy", "0.32em")
-	    .attr("fill", "#000")
-	    .attr("font-weight", "bold")
-	    .attr("text-anchor", "start")
-	    .text("Percentage")
-	    .attr("y", -10);
-
 	}
 
-	function barLegend(dataset){
+	function barLegendAxis(data){
 		var legend = g.append("g")
 		.attr("font-family", "sans-serif")
 		.attr("font-size", 10)
@@ -127,18 +111,36 @@ function drawBars(dataset,year){
 		.attr("y", 9.5)
 		.attr("dy", "0.32em")
 		.text(function(d) { return d; });
+
+		g.append("g")
+	    .attr("class", "axis")
+	    .attr("transform", "translate(0," + height + ")")
+	    .call(d3.axisBottom(x0));
+
+	    g.append("g")
+	    .attr("class", "axis")
+	    .call(d3.axisLeft(y).ticks(null, "s"))
+	    .append("text")
+	    .attr("x", 2)
+	    .attr("y", y(y.ticks().pop()) + 0.5)
+	    .attr("dy", "0.32em")
+	    .attr("fill", "#000")
+	    .attr("font-weight", "bold")
+	    .attr("text-anchor", "start")
+	    .text("Percentage")
+	    .attr("y", -10);
 	}
 
-	d3.csv("income14.csv", function(d, i, columns) {
+d3.csv("income14.csv", function(d, i, columns) {
   for (var i = 1, n = columns.length; i < n; ++i) d[columns[i]] = +d[columns[i]];//for each row
   return d;//get the value of each column
 }, function(error, data) {
 	if (error) throw error;
-	dataset2 = data;
-  keys = dataset2.columns.slice(1).slice(0,5);//get the name of each column as a key
-  //draw grouped bars
-  drawBars(dataset2,year);
-  barLegend(dataset2);
+	datasetBar = data;
+	keys = datasetBar.columns.slice(1).slice(0,5);//get the name of each column as a key
+	//draw grouped bars
+	drawBars(datasetBar,year);
+	barLegendAxis(datasetBar);
 });
 
 	var svg2 = d3.select("#scatter"),
@@ -188,8 +190,8 @@ svg2.append("g")
 
 
 
-function drawVis(data, xVariable, yVariable, year) { //draw the circiles initially and on each interaction with a control
-	var dataset = data.filter(function(d) {
+function drawVis(data, xVariable, yVariable, year) { //draw the circles initially and on each interaction with a control
+	var ndata = data.filter(function(d) {
 		return d["year"] == year;
 	});
 
@@ -214,17 +216,19 @@ function drawVis(data, xVariable, yVariable, year) { //draw the circiles initial
 	xlabel
 	.text(xVariableLabel);
 
-	var circle = svg2.selectAll("circle");
+	circles = svg2.selectAll("circle");
 
-	circle
-	.data(dataset)
+	circles
+	.data(ndata)
 	.attr("cx", function(d, i) { return xS(d[xVariable]);  })
 	.attr("cy", function(d, i) { return yS(d[yVariable]);  })
 	.style("fill", function(d) { return col(d.type); });
 
-	circle.data(dataset).exit().remove();
+	circles.data(ndata).exit().remove();
 
-	circle.data(dataset).enter().append("circle")
+
+
+	circles.data(ndata).enter().append("circle")
 	.attr("cx", function(d, i) { return xS(d[xVariable]);  })
 	.attr("cy", function(d, i) { return yS(d[yVariable]);  })
 	.attr("r", 5)
@@ -245,9 +249,9 @@ function drawVis(data, xVariable, yVariable, year) { //draw the circiles initial
 	});
 }
 
-function scatterLegend(dataset){
-	var data = dataset.filter(function(d) {
-		return d["year"] == "2014";
+function scatterLegend(data){
+	var ndata = data.filter(function(d) {
+		return d["year"] == "2014";//only draw legend once
 	});
 
 	var legend = svg2.append("g")
@@ -255,7 +259,7 @@ function scatterLegend(dataset){
 	.attr("font-size", 10)
 	.attr("text-anchor", "end")
 	.selectAll("g")
-	.data(data)
+	.data(ndata)
 	.enter().append("g")
 	.attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
 
@@ -277,10 +281,10 @@ function scatterLegend(dataset){
 
 
 
-d3.csv("ee14.csv", function(error, percentage) {
+d3.csv("ee14.csv", function(error, eedata) {
 //read in the data
 if (error) return console.warn(error);
-percentage.forEach(function(d) {
+eedata.forEach(function(d) {
      	// get numerical value
      	d.HE = +d.HE;
      	d.BE = +d.BE;
@@ -288,34 +292,32 @@ percentage.forEach(function(d) {
      	d.BB = +d.BB;
      	d.AHI = +d.AHI;
      });
-//default view shows householder employment and average household income
-xVariable = 'HE';
-yVariable = 'AHI';
-dataset = percentage;
+
+datasetScatter = eedata;
 
 //all the data is now loaded, so draw the initial vis
-drawVis(dataset, xVariable, yVariable, year);
-scatterLegend(dataset);
+drawVis(datasetScatter, xVariable, yVariable, year);
+scatterLegend(datasetScatter);
 
 });
 
 
 function filterType(mtype) {
 	xVariable = mtype;
-	drawVis(dataset, xVariable, yVariable, year); 
+	circles.remove();
+	drawVis(datasetScatter, xVariable, yVariable, year); 
 }
 
 function filterYear(myear) {
 	year = myear;
-	drawVis(dataset, xVariable, yVariable, year);
+	circles.remove();
+	drawVis(datasetScatter, xVariable, yVariable, year);
 	bars.remove();//clear old chart
-	// circiles.remove();
-	drawBars(dataset, year)
+	drawBars(datasetBar, year)
 }
 
 document.getElementById("myselectform").onchange =
 function() {
-	// circiles.remove();
 	filterType(this.value);
 }
 
