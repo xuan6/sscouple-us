@@ -9,6 +9,7 @@ var circles;//svg for scatter plot
 //tooltip for scatter plot
 var tooltip = d3.select("body").append("div")
 .attr("class", "tooltip")
+.attr("id","tooltipscatter")
 .style("opacity", 0);
 
 
@@ -112,25 +113,25 @@ function drawBars(data,year){
 		.text(function(d) { return d; });
 
 		g.append("g")
-	    .attr("class", "axis")
-	    .attr("transform", "translate(0," + height + ")")
-	    .call(d3.axisBottom(x0));
+		.attr("class", "axis")
+		.attr("transform", "translate(0," + height + ")")
+		.call(d3.axisBottom(x0));
 
-	    g.append("g")
-	    .attr("class", "axis")
-	    .call(d3.axisLeft(y).ticks(null, "s"))
-	    .append("text")
-	    .attr("x", 2)
-	    .attr("y", y(y.ticks().pop()) + 0.5)
-	    .attr("dy", "0.32em")
-	    .attr("fill", "#000")
-	    .attr("font-weight", "bold")
-	    .attr("text-anchor", "start")
-	    .text("Percentage")
-	    .attr("y", -10);
+		g.append("g")
+		.attr("class", "axis")
+		.call(d3.axisLeft(y).ticks(null, "s"))
+		.append("text")
+		.attr("x", 2)
+		.attr("y", y(y.ticks().pop()) + 0.5)
+		.attr("dy", "0.32em")
+		.attr("fill", "#000")
+		.attr("font-weight", "bold")
+		.attr("text-anchor", "start")
+		.text("Percentage")
+		.attr("y", -10);
 	}
 
-d3.csv("income14.csv", function(d, i, columns) {
+	d3.csv("income14.csv", function(d, i, columns) {
   for (var i = 1, n = columns.length; i < n; ++i) d[columns[i]] = +d[columns[i]];//for each row
   return d;//get the value of each column
 }, function(error, data) {
@@ -189,6 +190,7 @@ svg2.append("g")
 
 
 var xVar;
+var xVarLabel;
 function drawVis(data, xVariable, yVariable, year) { //draw the circles initially and on each interaction with a control
 	var ndata = data.filter(function(d) {
 		return d["year"] == year;
@@ -210,7 +212,7 @@ function drawVis(data, xVariable, yVariable, year) { //draw the circles initiall
 		break;
 		default:
 		xVariableLabel = 'Householder Employed(%)';
-}
+	}
 
 	xlabel
 	.text(xVariableLabel);
@@ -218,6 +220,7 @@ function drawVis(data, xVariable, yVariable, year) { //draw the circles initiall
 	circles = svg2.selectAll("circle");
 
 	xVar = xVariable.toString();
+	xVarLabel = xVariableLabel.toString();
 
 	circles
 	.data(ndata)
@@ -237,7 +240,7 @@ function drawVis(data, xVariable, yVariable, year) { //draw the circles initiall
 		tooltip.transition()
 		.duration(200)
 		.style("opacity",.9);
-		tooltip.html("<p><b>Percentage:</b></p><p>"+d[xVar]+"%</p><p><b>Household Income:</b></p><p>$"+d[yVariable]+"</p>")
+		tooltip.html("<p><b>"+xVarLabel+":</b></p><p>"+d[xVar]+"%</p><p><b>Household Income:</b></p><p>$"+d[yVariable]+"</p>")
 		.style("left",(d3.event.pageX+20)+"px")
 		.style("top",(d3.event.pageY -30)+"px");
 	})
