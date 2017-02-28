@@ -11,6 +11,11 @@ body {
 	font: 11px sans-serif;
 }
 
+h1{
+  margin-left: 50px;
+}
+
+
 .canvas{
 	display: inline-block;
 }
@@ -18,62 +23,63 @@ body {
 
 #controls{
 	display: block;
-	top: 60px;
-	position: relative;
-	margin-left: 70px;
+}
+
+.subcontrol{
+  margin-top: 20px;
+  margin-bottom: 20px;
+  display: inline-block;
+  margin-left: 50px;
 }
 
 /*.filters{
   display: inline-block;
-}*/
+  }*/
 
-#scatter{
-	margin-left:50px; 
-	margin-bottom:-75px; 
-	padding-left:60px; 
-	padding-top:20px;
-}
+  #scatter{
+   margin-left:50px; 
+   padding-left:60px; 
+   padding-top:20px;
+   margin-bottom: -10px;
+ }
 
-.axis line,
-.axis text {
-	font: 11px sans-serif;
-}
-.axis path {
-	fill: none;
-	stroke: #000;
-	shape-rendering: crispEdges;
-}
+ .axis line,
+ .axis text {
+   font: 11px sans-serif;
+ }
+ .axis path {
+   fill: none;
+   stroke: #000;
+   shape-rendering: crispEdges;
+ }
 
 
-.tooltip{
-	position: absolute;
-	text-align: left;
-	width: 150px;
-	height: 120px;
-	padding: 4px;
-	margin-top: -20px;
-	font: 10px sans-serif;
-	pointer-events: none;
-	background-color: #fff;
-	box-shadow: 2px 2px 2px #828282;
-	border-radius: 15px;
-}
+ .tooltip{
+   position: absolute;
+   text-align: left;
+   width: 150px;
+   height: 120px;
+   padding: 4px;
+   margin-top: -20px;
+   font: 10px sans-serif;
+   pointer-events: none;
+   background-color: #fff;
+   box-shadow: 2px 2px 2px #828282;
+   border-radius: 15px;
+ }
 
-#tooltipscatter{
+ #tooltipscatter{
   width: 220px;
 }
 
-.tooltip p{
-	margin-left: 20px;
+.tooltip b, p{
+  margin-left: 10px;
 }
 
-/* #ttscatter{
- 	background-color: rgba(188,188,188,0.1);
- }
-
-#ttbars {
-  background-color: #fff;
-  }*/
+label{
+  font-size: 16px;
+  font-weight: 700;
+}
 
   svg{
   	margin: 10px 10px;
@@ -82,36 +88,48 @@ body {
 
   </style>
   <body>
+    <H1>Demographics</H1>
   	<div class="viz">
   		<div class="canvas">
   			<svg id="bars" width="500" height="400"></svg>
   		</div>
   		<div class="canvas">
   			<svg id="scatter" width="500" height="400"></svg>
-  			<div id="controls">
-  				<label for="type">Year:</label>
-  				<div class="filters">
-  					<select id="selectyear">
-  						<option value="2014">2014</option>
-  						<option value="2005">2005</option>
-  					</select>
-  				</div>
-  				<label for="type" >Variable:</label>
-  				<div class="filters">
-  					<select id="selecttype">
-  						<option disabled>---Employment---</option>
-  						<option value="HE">Householder Employed</option>
-  						<option value="BE">Both Employed</option>
-  						<option disabled>---Education---</option>
-  						<option value="HB">Householder Bachelor Degree</option>
-  						<option value="BB">Both Bachelor Degree</option>
-  					</select>
-  				</div>
-  				
-  			</div>
   		</div>
-
-  	</div>
+      <div id="controls">
+        <div class="subcontrol">
+          <label for="type">Year:</label>
+          <div class="filters">
+            <form id="selectyear">
+              <input type="radio" name="year" value="2014" checked>2014</option>
+              <input type="radio" name="year" value="2013">2013</option>
+              <input type="radio" name="year" value="2012">2012</option>
+              <input type="radio" name="year" value="2011">2011</option>
+              <input type="radio" name="year" value="2010">2010</option>
+              <input type="radio" name="year" value="2009">2009</option>
+              <input type="radio" name="year" value="2008">2008</option>
+              <input type="radio" name="year" value="2007">2007</option>
+              <input type="radio" name="year" value="2006">2006</option>
+              <input type="radio" name="year" value="2005">2005</option>
+            </form>
+          </div>
+        </div>
+        <div class="subcontrol">
+          <label for="type">X Variable:</label>
+          <div class="filters">
+            <form id="selecttype">
+              Employment Rates: 
+              <input type="radio" name="type" value="HE" checked>Householder Employed</option>
+              <input type="radio" name="type" value="BE">Both Partners Employed</option>
+              <br>
+              Education Attainment: 
+              <input type="radio" name="type" value="HB">Householder has at least a Bachelor's Degree</option>
+              <input type="radio" name="type" value="BB">Both Partners with at least a Bachelor's Degree</option>
+            </form>
+          </div>
+        </div> 
+      </div>
+    </div>
 
   </div>
 </body>

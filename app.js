@@ -78,7 +78,7 @@ function drawBars(data,year){
 	    	tooltipbars.transition()
 	    	.duration(200)
 	    	.style("opacity",.9);
-	    	tooltipbars.html("<p><b>Rank:</b></p><p>"+d.key+"</p><p><b>Percentage:</b></p><p>"+String(d.per).slice(0,4)+"%</p>")
+	    	tooltipbars.html("<b>Rank:</b><p>"+d.key+"</p><b>Percentage:</b><p>"+String(d.per).slice(0,4)+"%</p>")
 	    	.style("left",(d3.event.pageX+20)+"px")
 	    	.style("top",(d3.event.pageY -30)+"px");
 	    })
@@ -205,10 +205,10 @@ function drawVis(data, xVariable, yVariable, year) { //draw the circles initiall
 		xVariableLabel = 'Both Partners Employed(%)';
 		break;
 		case 'HB':
-		xVariableLabel = 'Householder with Bachelor or Higer Degree(%)';
+		xVariableLabel = "Householder has at least a Bachelor's Degree(%)";
 		break;
 		case 'BB':
-		xVariableLabel = 'Both Partners with Bachelor or Higer Degrees(%)';
+		xVariableLabel = "Both Partners with at least a Bachelor's Degree(%)";
 		break;
 		default:
 		xVariableLabel = 'Householder Employed(%)';
@@ -240,7 +240,7 @@ function drawVis(data, xVariable, yVariable, year) { //draw the circles initiall
 		tooltip.transition()
 		.duration(200)
 		.style("opacity",.9);
-		tooltip.html("<p><b>"+xVarLabel+":</b></p><p>"+d[xVar]+"%</p><p><b>Household Income:</b></p><p>$"+d[yVariable]+"</p>")
+		tooltip.html("<b>"+xVarLabel+":</b><p>"+d[xVar]+"%</p><b>Household Income:</b><p>$"+d[yVariable]+"</p>")
 		.style("left",(d3.event.pageX+20)+"px")
 		.style("top",(d3.event.pageY -30)+"px");
 	})
@@ -320,12 +320,12 @@ function filterYear(myear) {
 
 document.getElementById("selecttype").onchange =
 function() {
-	filterType(this.value);
+	filterType(document.querySelector('input[name="type"]:checked').value);
 }
 
 document.getElementById("selectyear").onchange =
 function() {
-	filterYear(this.value);
+	filterYear(document.querySelector('input[name="year"]:checked').value);
 }
 
 
