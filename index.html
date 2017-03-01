@@ -11,10 +11,31 @@ body {
 	font: 11px sans-serif;
 }
 
-h1{
-  margin-left: 50px;
+header{
+  height: 30px;
+  padding-top: 10px;
+  padding-bottom: 60px;
+  background-color: #fff;
+  margin-bottom: 20px;
+}
+header p{
+  margin:2px 0 2px 50px;
 }
 
+
+header h1{
+  margin-left: 50px;
+  margin-top: 0;
+}
+
+#break{
+  margin-top: -10px;
+  width:60px;
+  height:7px;
+  background-color: #333232;
+  margin-left: 50px;
+  margin-bottom: 6px;
+}
 
 .canvas{
 	display: inline-block;
@@ -31,10 +52,6 @@ h1{
   display: inline-block;
   margin-left: 50px;
 }
-
-/*.filters{
-  display: inline-block;
-  }*/
 
   #scatter{
    margin-left:50px; 
@@ -58,22 +75,34 @@ h1{
    position: absolute;
    text-align: left;
    width: 150px;
-   height: 120px;
+   height: 100px;
    padding: 4px;
    margin-top: -20px;
+   margin-left: -10px;
    font: 10px sans-serif;
    pointer-events: none;
    background-color: #fff;
    box-shadow: 2px 2px 2px #828282;
-   border-radius: 15px;
+   border-radius: 10px;
  }
 
  #tooltipscatter{
   width: 220px;
+  height: 120px;
 }
 
-.tooltip b, p{
-  margin-left: 10px;
+/*.tooltip b{
+  padding-top: 10px;
+}*/
+
+/*.tooltip p{
+  padding-top: 10px;
+}*/
+
+.tick line{
+  stroke:#efefef;
+  opacity: .7;
+
 }
 
 label{
@@ -86,9 +115,17 @@ label{
   }
 
 
+
+
   </style>
   <body>
-    <H1>Demographics</H1>
+    <header>
+      <H1>Socioeconomic Characteristics of <BR>Same-sex Couples vs. Opposite-sex Couples in the US</H1>
+      <div id="break"></div>
+      <p>Data source: American Community Survey Data on Same Sex Couples, 2015-2014, U.S. Census Bureau. <a href="http://www.census.gov/hhes/samesex/data/acs.html">(View raw data)</a></p>
+      <p>Designed and coded by Xuan Liu</p>
+    </header>
+    
   	<div class="viz">
   		<div class="canvas">
   			<svg id="bars" width="500" height="400"></svg>
@@ -130,7 +167,6 @@ label{
         </div> 
       </div>
     </div>
-
   </div>
 </body>
 <script src="app.js"></script>

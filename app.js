@@ -159,6 +159,7 @@ var yS = d3.scaleLinear()
 
 var xAxisS = d3.axisBottom()
 .ticks(10)
+.tickSizeInner(-height)
 .scale(xS);
 
 var xlabel = svg2.append("g")
@@ -174,6 +175,7 @@ var xlabel = svg2.append("g")
 .text("Householder Employed (%)");
 
 var yAxisS = d3.axisLeft()
+.tickSizeInner(-width)
 .scale(yS);
 
 svg2.append("g")
@@ -286,15 +288,6 @@ function scatterLegend(data){
 d3.csv("ee14.csv", function(error, eedata) {
 //read in the data
 if (error) return console.warn(error);
-// eedata.forEach(function(d) {
-//      	// get numerical value
-//      	d.HE = +d.HE;
-//      	d.BE = +d.BE;
-//      	d.HB = +d.HB;
-//      	d.BB = +d.BB;
-//      	d.AHI = +d.AHI;
-//      });
-
 datasetScatter = eedata;
 
 //all the data is now loaded, so draw the initial vis
