@@ -69,6 +69,7 @@ function drawBars(data,year){
 	    	return keys.map(function(key) { return {key: key, per: d[key]}; }); 
 	    })
 	    .enter().append("rect")//draw individual bars
+	    .attr("class","bar")
 	    .attr("x", function(d) { return x1(d.key); })
 	    .attr("y", function(d) { return y(d.per); })
 	    .attr("width", x1.bandwidth())
@@ -299,13 +300,13 @@ scatterLegend(datasetScatter);
 
 function filterType(mtype) {
 	xVariable = mtype;
-	circles.remove();
+	// circles.remove(); if circels DOM are removed, the CSS transition animation is inactive
 	drawVis(datasetScatter, xVariable, yVariable, year); 
 }
 
 function filterYear(myear) {
 	year = myear;
-	circles.remove();
+	// circles.remove(); if circels DOM are removed, the CSS transition animation is inactive
 	drawVis(datasetScatter, xVariable, yVariable, year);
 	bars.remove();//clear old chart
 	drawBars(datasetBar, year)
@@ -320,5 +321,6 @@ document.getElementById("selectyear").onchange =
 function() {
 	filterYear(document.querySelector('input[name="year"]:checked').value);
 }
+
 
 

@@ -28,6 +28,8 @@ header h1{
   margin-top: 0;
 }
 
+
+
 #break{
   margin-top: -10px;
   width:60px;
@@ -91,13 +93,22 @@ header h1{
   height: 120px;
 }
 
-/*.tooltip b{
-  padding-top: 10px;
-}*/
+circle{
+  transition:r .8s, cx 1s, cy 1s;
+}
 
-/*.tooltip p{
-  padding-top: 10px;
-}*/
+circle:hover{
+  r: 10px;
+}
+
+rect{
+  transition: y 1s,height 1s;
+}
+
+rect.bar:hover{
+  opacity: .9;
+}
+
 
 .tick line{
   stroke:#efefef;
@@ -120,7 +131,7 @@ label{
   </style>
   <body>
     <header>
-      <H1>Socioeconomic Characteristics of <BR>Same-sex Couples vs. Opposite-sex Couples in the US</H1>
+      <H1>Is it a Man's World? Socioeconomic Characteristics of <BR>Same-sex Couples vs. Opposite-sex Couples in the US</H1>
       <div id="break"></div>
       <p>Data source: American Community Survey Data on Same Sex Couples, 2015-2014, U.S. Census Bureau. <a href="http://www.census.gov/hhes/samesex/data/acs.html">(View raw data)</a></p>
       <p>Designed and coded by Xuan Liu</p>
