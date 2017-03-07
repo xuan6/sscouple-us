@@ -39,6 +39,7 @@ var x1 = d3.scaleBand()//For each individual bar in a group, constructs a new ba
 var z = d3.scaleOrdinal()//colors for different columns i.e. for different ranks
 .range(["#C6E9BF","#A2D89A", "#73C475", "#30A355", "#006F2F"]);
 
+
 function drawBars(data,year){
 
 	var ndata = data.filter(function(d) {
@@ -71,8 +72,8 @@ function drawBars(data,year){
 	    .enter().append("rect")//draw individual bars
 	    .attr("class","bar")
 	    .attr("x", function(d) { return x1(d.key); })
-	    .attr("y", function(d) { return y(d.per); })
 	    .attr("width", x1.bandwidth())
+	    .attr("y", function(d) { return y(d.per); })
 	    .attr("height", function(d) { return height - y(d.per); })
 	    .attr("fill", function(d) { return z(d.key); })
 	    .on("mouseover",function(d){
@@ -88,7 +89,6 @@ function drawBars(data,year){
 	    	.duration(500)
 	    	.style("opacity",0);
 	    });
-
 	}
 
 	function barLegendAxis(data){
@@ -321,6 +321,3 @@ document.getElementById("selectyear").onchange =
 function() {
 	filterYear(document.querySelector('input[name="year"]:checked').value);
 }
-
-
-

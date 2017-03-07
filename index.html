@@ -5,6 +5,7 @@
 <script src="http://code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
+
 <style type="text/css">
 
 body {
@@ -55,40 +56,40 @@ header h1{
   margin-left: 50px;
 }
 
-  #scatter{
-   margin-left:50px; 
-   padding-left:60px; 
-   padding-top:20px;
-   margin-bottom: -10px;
- }
+#scatter{
+ margin-left:50px; 
+ padding-left:60px; 
+ padding-top:20px;
+ margin-bottom: -10px;
+}
 
- .axis line,
- .axis text {
-   font: 11px sans-serif;
- }
- .axis path {
-   fill: none;
-   stroke: #000;
-   shape-rendering: crispEdges;
- }
+.axis line,
+.axis text {
+ font: 11px sans-serif;
+}
+.axis path {
+ fill: none;
+ stroke: #000;
+ shape-rendering: crispEdges;
+}
 
 
- .tooltip{
-   position: absolute;
-   text-align: left;
-   width: 150px;
-   height: 100px;
-   padding: 4px;
-   margin-top: -20px;
-   margin-left: -10px;
-   font: 10px sans-serif;
-   pointer-events: none;
-   background-color: #fff;
-   box-shadow: 2px 2px 2px #828282;
-   border-radius: 10px;
- }
+.tooltip{
+ position: absolute;
+ text-align: left;
+ width: 150px;
+ height: 100px;
+ padding: 4px;
+ margin-top: -20px;
+ margin-left: -10px;
+ font: 10px sans-serif;
+ pointer-events: none;
+ background-color: #fff;
+ box-shadow: 2px 2px 2px #828282;
+ border-radius: 10px;
+}
 
- #tooltipscatter{
+#tooltipscatter{
   width: 220px;
   height: 120px;
 }
@@ -101,7 +102,7 @@ circle:hover{
   r: 10px;
 }
 
-rect{
+rect.bar{
   transition: y 1s,height 1s;
 }
 
@@ -121,62 +122,109 @@ label{
   font-weight: 700;
 }
 
-  svg{
-  	margin: 10px 10px;
-  }
+svg{
+ margin: 10px 10px;
+}
+
+input[type=radio]:hover{
+  cursor: pointer;
+}
+
+/*new*/
+
+.filters input[type="radio"] {
+  display: none;
+}
+
+.filters label {
+  display: inline-block;
+  background-color: #e8e8e8;
+  color: #515151;
+  padding: 2px 8px;
+  font-family: Arial;
+  font-size: 12px;
+  font-weight: 200;
+  cursor: pointer;
+  transition:all .3s;
+}
+
+.filters label:hover {
+  background-color:#6f7070;
+  color: #fff;
+/*  padding: 2px 8px;
+  font-family: Arial;*/
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.filters input[type="radio"]:checked+label {
+  background-color: #6f7070;
+  color: #fff;
+}
 
 
+</style>
+<body>
+  <header>
+    <H1>Is it a Man's World? Socioeconomic Characteristics of <BR>Same-sex Couples vs. Opposite-sex Couples in the US</H1>
+    <div id="break"></div>
+    <p>Data source: American Community Survey Data on Same Sex Couples, 2015-2014, U.S. Census Bureau. <a href="http://www.census.gov/hhes/samesex/data/acs.html">(View raw data)</a></p>
+    <p>Designed and coded by Xuan Liu</p>
+  </header>
 
-
-  </style>
-  <body>
-    <header>
-      <H1>Is it a Man's World? Socioeconomic Characteristics of <BR>Same-sex Couples vs. Opposite-sex Couples in the US</H1>
-      <div id="break"></div>
-      <p>Data source: American Community Survey Data on Same Sex Couples, 2015-2014, U.S. Census Bureau. <a href="http://www.census.gov/hhes/samesex/data/acs.html">(View raw data)</a></p>
-      <p>Designed and coded by Xuan Liu</p>
-    </header>
-    
-  	<div class="viz">
-  		<div class="canvas">
-  			<svg id="bars" width="500" height="400"></svg>
-  		</div>
-  		<div class="canvas">
-  			<svg id="scatter" width="500" height="400"></svg>
-  		</div>
-      <div id="controls">
-        <div class="subcontrol">
-          <label for="type">Year:</label>
-          <div class="filters">
-            <form id="selectyear">
-              <input type="radio" name="year" value="2014" checked>2014</option>
-              <input type="radio" name="year" value="2013">2013</option>
-              <input type="radio" name="year" value="2012">2012</option>
-              <input type="radio" name="year" value="2011">2011</option>
-              <input type="radio" name="year" value="2010">2010</option>
-              <input type="radio" name="year" value="2009">2009</option>
-              <input type="radio" name="year" value="2008">2008</option>
-              <input type="radio" name="year" value="2007">2007</option>
-              <input type="radio" name="year" value="2006">2006</option>
-              <input type="radio" name="year" value="2005">2005</option>
-            </form>
-          </div>
-        </div>
-        <div class="subcontrol">
-          <label for="type">X Variable:</label>
-          <div class="filters">
-            <form id="selecttype">
-              Employment Rates: 
-              <input type="radio" name="type" value="HE" checked>Householder Employed</option>
-              <input type="radio" name="type" value="BE">Both Partners Employed</option>
-              <br>
-              Education Attainment: 
-              <input type="radio" name="type" value="HB">Householder has at least a Bachelor's Degree</option>
-              <input type="radio" name="type" value="BB">Both Partners with at least a Bachelor's Degree</option>
-            </form>
-          </div>
-        </div> 
+  <div class="viz">
+    <div class="canvas">
+     <svg id="bars" width="500" height="400"></svg>
+   </div>
+   <div class="canvas">
+     <svg id="scatter" width="500" height="400"></svg>
+   </div>
+   <div id="controls">
+    <div class="subcontrol">
+      <label for="type">Year:</label>
+      <div class="filters">
+        <form id="selectyear">
+          <input type="radio" id="radio1" name="year" value="2014" checked>
+          <label for="radio1">2014</label>
+          <input type="radio" id="radio2" name="year" value="2013">
+          <label for="radio2">2013</label>
+          <input type="radio" id="radio3" name="year" value="2012">
+          <label for="radio3">2012</label>
+          <input type="radio" id="radio4" name="year" value="2011">
+          <label for="radio4">2011</label>
+          <input type="radio" id="radio5" name="year" value="2010">
+          <label for="radio5">2010</label>
+          <input type="radio" id="radio6" name="year" value="2009">
+          <label for="radio6">2009</label>
+          <input type="radio" id="radio7" name="year" value="2008">
+          <label for="radio7">2008</label>
+          <input type="radio" id="radio8" name="year" value="2007">
+          <label for="radio8">2007</label>
+          <input type="radio" id="radio9" name="year" value="2006">
+          <label for="radio9">2006</label>
+          <input type="radio" id="radio10" name="year" value="2005">
+          <label for="radio10">2005</label>
+        </form>
       </div>
+    </div>
+      <div class="subcontrol">
+        <label for="type">X Variable:</label>
+        <div class="filters">
+          <form id="selecttype">
+            <div class="emp">
+            <input type="radio" id="radio11" name="type" value="HE" checked>
+            <label for="radio11">Householder Employed</label>
+            <input type="radio" id="radio12" name="type" value="BE">
+            <label for="radio12">Both Partners Employed</label>
+            </div>
+            <div class="edu" style="margin-top:2px;">
+            <input type="radio" id="radio13" name="type" value="HB">
+            <label for="radio13">Householder with at least a Bachelor's Degree</label>
+            <input type="radio" id="radio14" name="type" value="BB">
+            <label for="radio14">Both Partners with at least a Bachelor's Degree</label>
+          </form>
+        </div>
+      </div> 
     </div>
   </div>
 </body>
