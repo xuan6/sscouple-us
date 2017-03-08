@@ -128,8 +128,18 @@ function drawBars(data,year){
 		.attr("fill", "#000")
 		.attr("font-weight", "bold")
 		.attr("text-anchor", "start")
-		.text("Percentage(%)")
+		.text("Percentage")
 		.attr("y", -10);
+
+		var parsign = g.append("text")
+		.attr("font-family", "sans-serif")
+		.attr("font-size", 40)
+		.attr("x", 10)
+		.attr("y", 20)
+		.attr("font-weight",600)
+		.attr("opacity",0.2)
+		.attr("dy", "0.32em")
+		.text("%")
 	}
 
 	d3.csv("income14.csv", function(d, i, columns) {
@@ -173,7 +183,7 @@ var xlabel = svg2.append("g")
 .attr("fill", "#000")
 .attr("text-anchor", "end")
 .attr("font-weight", "bold")
-.text("Householder Employed (%)");
+.text("Householder Employed");
 
 var yAxisS = d3.axisLeft()
 .tickSizeInner(-width)
@@ -188,7 +198,7 @@ svg2.append("g")
 .attr("dy", "0.32em")
 .attr("fill", "#000")
 .attr("text-anchor", "start")
-.text("Average Household Income ($)")
+.text("Average Household Income")
 .attr("y", -10);
 
 
@@ -202,19 +212,19 @@ function drawVis(data, xVariable, yVariable, year) { //draw the circles initiall
 	var xVariableLabel;
 	switch(xVariable) {
 		case 'HE':
-		xVariableLabel = 'Householder Employed(%)';
+		xVariableLabel = 'Householder Employed';
 		break;
 		case 'BE':
-		xVariableLabel = 'Both Partners Employed(%)';
+		xVariableLabel = 'Both Partners Employed';
 		break;
 		case 'HB':
-		xVariableLabel = "Householder has at least a Bachelor's Degree(%)";
+		xVariableLabel = "Householder has at least a Bachelor's Degree";
 		break;
 		case 'BB':
-		xVariableLabel = "Both Partners with at least a Bachelor's Degree(%)";
+		xVariableLabel = "Both Partners with at least a Bachelor's Degree";
 		break;
 		default:
-		xVariableLabel = 'Householder Employed(%)';
+		xVariableLabel = 'Householder Employed';
 	}
 
 	xlabel
@@ -280,6 +290,27 @@ function scatterLegend(data){
 	.attr("y", 9.5)
 	.attr("dy", "0.32em")
 	.text(function(d) { return d.type; });
+
+	var dollarsign = svg2.append("text")
+		.attr("font-family", "sans-serif")
+		.attr("font-size", 40)
+		.attr("x", 10)
+		.attr("y", 20)
+		.attr("font-weight",600)
+		.attr("opacity",0.2)
+		.attr("dy", "0.32em")
+		.text("$")
+
+
+	var persign = svg2.append("text")
+		.attr("font-family", "sans-serif")
+		.attr("font-size", 40)
+		.attr("x", width-35)
+		.attr("y", height-20)
+		.attr("font-weight",600)
+		.attr("opacity",0.2)
+		.attr("dy", "0.32em")
+		.text("%")
 }
 
 
