@@ -20,12 +20,12 @@ header{
   margin-bottom: 20px;
 }
 header p{
-  margin:2px 0 2px 50px;
+  margin:2px 0 2px 3rem;
 }
 
 
 header h1{
-  margin-left: 50px;
+  margin-left: 3rem;
   margin-top: 0;
 }
 
@@ -36,7 +36,7 @@ header h1{
   width:60px;
   height:7px;
   background-color: #333232;
-  margin-left: 50px;
+  margin-left: 3rem;
   margin-bottom: 6px;
 }
 
@@ -53,11 +53,11 @@ header h1{
   margin-top: 20px;
   margin-bottom: 20px;
   display: inline-block;
-  margin-left: 50px;
+  margin-left: 3rem;
 }
 
 #scatter{
- margin-left:50px; 
+ margin-left:3rem; 
  padding-left:60px; 
  padding-top:20px;
  margin-bottom: -10px;
@@ -79,14 +79,14 @@ header h1{
  text-align: left;
  width: 150px;
  height: 100px;
- padding: 4px;
+ padding: 8px;
  margin-top: -20px;
  margin-left: -10px;
  font: 10px sans-serif;
  pointer-events: none;
  background-color: #fff;
  box-shadow: 2px 2px 2px #828282;
- border-radius: 10px;
+ border-radius: 8px;
 }
 
 #tooltipscatter{
@@ -166,9 +166,16 @@ input[type=radio]:hover{
   color: #fff;
 }
 
-/*text{
-  font-family: "sans-serif";
-}*/
+.analysis {
+  margin-left: 3rem;
+  line-height: 1.2rem;
+  opacity: 0.7;
+}
+
+.analysis p{
+  font-size: 1rem;
+  max-width: 960px;
+}
 
 
 </style>
@@ -233,6 +240,10 @@ input[type=radio]:hover{
           </form>
         </div>
       </div> 
+    </div>
+    <div class="analysis">
+      <p>This visualization intends to explore how couples’ sexual orientation, education level, and employment rate would impact their household income. </p>
+      <p>At a first glance, same-sex couples usually have better employment status and education attainment than opposite-sex couples. However, male-male couples always enjoy higher income than female-female couples, even though their education and employment status are close or even the same. Also, in the year 2014, the employment and education of the female-female couple are better than those of opposite-sex couples, but the household income of female-female couples becomes slightly lower than that of opposite-sex couples. Accordingly, it looks like that the more males within a couple, the higher the household income. Although many other factors, such as having kids or not, could affect a family’s employment status and household income, the result indicates that males might enjoy advantages at the workplace.</p>
     </div>
   </div>
 </body>
